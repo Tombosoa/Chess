@@ -19,43 +19,23 @@ public class Pawn extends Piece{
     }
 
     @Override
-    public void move() {
+    protected void move() {
         List<Case> possibleMoves = new ArrayList<>();
         if (this.getColor() == Color.white) {
             Case forward = new Case(NumericalReference.increment(this.getPosition().getCurrentPosition().numericalReference()), this.getPosition().getCurrentPosition().alphabeticalReference());
             possibleMoves.add(forward);
-
-            Case leftCapture = new Case(forward.numericalReference().decrement(forward.numericalReference()), forward.alphabeticalReference().left());
-            if (leftCapture.isValid()) {
-                possibleMoves.add(leftCapture);
-            }
-
-            Case rightCapture = new Case(forward.numericalReference().increment(forward.numericalReference()), forward.alphabeticalReference().right());
-            if (rightCapture.isValid()) {
-                possibleMoves.add(rightCapture);
-            }
         } else {
             Case backward = new Case(this.getPosition().getCurrentPosition().numericalReference().decrement(this.getPosition().getCurrentPosition().numericalReference()), this.getPosition().getCurrentPosition().alphabeticalReference());
             possibleMoves.add(backward);
-
-            Case leftCapture = new Case(backward.numericalReference().increment(backward.numericalReference()), backward.alphabeticalReference().left());
-            if (leftCapture.isValid()) {
-                possibleMoves.add(leftCapture);
-            }
-
-            Case rightCapture = new Case(backward.numericalReference().decrement(backward.numericalReference()), backward.alphabeticalReference().right());
-            if (rightCapture.isValid()) {
-                possibleMoves.add(rightCapture);
-            }
         }
         System.out.println(possibleMoves);
     }
 
     @Override
-    public void attack() {
+    protected void attack() {
         List<Case> possibleAttackPositions = new ArrayList<>();
         if (this.getColor() == Color.white) {
-            Case leftCapture = new Case(this.getPosition().getCurrentPosition().numericalReference().decrement(this.getPosition().getCurrentPosition().numericalReference()), this.getPosition().getCurrentPosition().alphabeticalReference().left());
+            Case leftCapture = new Case(this.getPosition().getCurrentPosition().numericalReference().increment(this.getPosition().getCurrentPosition().numericalReference()), this.getPosition().getCurrentPosition().alphabeticalReference().left());
             if (leftCapture.isValid()) {
                 possibleAttackPositions.add(leftCapture);
             }
@@ -70,7 +50,7 @@ public class Pawn extends Piece{
                 possibleAttackPositions.add(leftCapture);
             }
 
-            Case rightCapture = new Case(this.getPosition().getCurrentPosition().numericalReference().increment(this.getPosition().getCurrentPosition().numericalReference()), this.getPosition().getCurrentPosition().alphabeticalReference().right());
+            Case rightCapture = new Case(this.getPosition().getCurrentPosition().numericalReference().decrement(this.getPosition().getCurrentPosition().numericalReference()), this.getPosition().getCurrentPosition().alphabeticalReference().right());
             if (rightCapture.isValid()) {
                 possibleAttackPositions.add(rightCapture);
             }
@@ -79,10 +59,11 @@ public class Pawn extends Piece{
     }
 
     public static void main(String[] args) {
-        Case cases = new Case(NumericalReference.TWO, AlphabeticalReference.b);
+        Case cases = new Case(NumericalReference.TWO, AlphabeticalReference.e);
         Position position = new Position(cases);
         Pawn pion = new Pawn(Color.white, position);
          pion.move();
         // pion.attack();
+        System.out.println(pion.getPosition().getCurrentPosition());
     }
 }
