@@ -22,12 +22,21 @@ public class Pawn extends Piece{
     protected void move() {
         List<Case> possibleMoves = new ArrayList<>();
         if (this.getColor() == Color.white) {
-            Case forward = new Case(NumericalReference.increment(this.getPosition().getCurrentPosition().numericalReference()), this.getPosition().getCurrentPosition().alphabeticalReference());
-            possibleMoves.add(forward);
+            Case forward = new Case(NumericalReference.increment(this.getPosition().getCurrentPosition().getNumericalReference()), this.getPosition().getCurrentPosition().getAlphabeticalReference());
+            if (forward.isValid() && !forward.isBusy()) {
+                possibleMoves.add(forward);
+            }
         } else {
-            Case backward = new Case(this.getPosition().getCurrentPosition().numericalReference().decrement(this.getPosition().getCurrentPosition().numericalReference()), this.getPosition().getCurrentPosition().alphabeticalReference());
-            possibleMoves.add(backward);
+            Case backward = new Case(NumericalReference.decrement(this.getPosition().getCurrentPosition().getNumericalReference()), this.getPosition().getCurrentPosition().getAlphabeticalReference());
+            if (backward.isValid() && !backward.isBusy()) {
+                possibleMoves.add(backward);
+            }
         }
+
+        if (!possibleMoves.isEmpty()) {
+            this.getPosition().setCurrentPosition(possibleMoves.getFirst());
+        }
+
         System.out.println(possibleMoves);
     }
 
@@ -35,35 +44,48 @@ public class Pawn extends Piece{
     protected void attack() {
         List<Case> possibleAttackPositions = new ArrayList<>();
         if (this.getColor() == Color.white) {
-            Case leftCapture = new Case(this.getPosition().getCurrentPosition().numericalReference().increment(this.getPosition().getCurrentPosition().numericalReference()), this.getPosition().getCurrentPosition().alphabeticalReference().left());
-            if (leftCapture.isValid()) {
+            Case leftCapture = new Case(NumericalReference.decrement(this.getPosition().getCurrentPosition().getNumericalReference()), this.getPosition().getCurrentPosition().getAlphabeticalReference().left());
+            if (leftCapture.isValid() && leftCapture.isBusy()) {
                 possibleAttackPositions.add(leftCapture);
             }
 
-            Case rightCapture = new Case(this.getPosition().getCurrentPosition().numericalReference().increment(this.getPosition().getCurrentPosition().numericalReference()), this.getPosition().getCurrentPosition().alphabeticalReference().right());
-            if (rightCapture.isValid()) {
+            Case rightCapture = new Case(NumericalReference.increment(this.getPosition().getCurrentPosition().getNumericalReference()), this.getPosition().getCurrentPosition().getAlphabeticalReference().right());
+            if (rightCapture.isValid() && rightCapture.isBusy()) {
                 possibleAttackPositions.add(rightCapture);
             }
         } else {
-            Case leftCapture = new Case(this.getPosition().getCurrentPosition().numericalReference().decrement(this.getPosition().getCurrentPosition().numericalReference()), this.getPosition().getCurrentPosition().alphabeticalReference().left());
-            if (leftCapture.isValid()) {
+            Case leftCapture = new Case(NumericalReference.increment(this.getPosition().getCurrentPosition().getNumericalReference()), this.getPosition().getCurrentPosition().getAlphabeticalReference().left());
+            if (leftCapture.isValid() && leftCapture.isBusy()) {
                 possibleAttackPositions.add(leftCapture);
             }
 
-            Case rightCapture = new Case(this.getPosition().getCurrentPosition().numericalReference().decrement(this.getPosition().getCurrentPosition().numericalReference()), this.getPosition().getCurrentPosition().alphabeticalReference().right());
-            if (rightCapture.isValid()) {
+            Case rightCapture = new Case(NumericalReference.decrement(this.getPosition().getCurrentPosition().getNumericalReference()), this.getPosition().getCurrentPosition().getAlphabeticalReference().right());
+            if (rightCapture.isValid() && rightCapture.isBusy()) {
                 possibleAttackPositions.add(rightCapture);
             }
         }
+
+        if (!possibleAttackPositions.isEmpty()) {
+            this.getPosition().setCurrentPosition(possibleAttackPositions.getFirst());
+        }
+
         System.out.println(possibleAttackPositions);
     }
 
     public static void main(String[] args) {
         Case cases = new Case(NumericalReference.TWO, AlphabeticalReference.e);
+        Case cases1 = new Case(NumericalReference.TWO, AlphabeticalReference.f);
+
         Position position = new Position(cases);
+        Position position1 = new Position(cases1);
+
         Pawn pion = new Pawn(Color.white, position);
+        Pawn pion1 = new Pawn(Color.white, position1);
+
          pion.move();
         // pion.attack();
-        System.out.println(pion.getPosition().getCurrentPosition());
+        pion.move();
+        pion.move();
+        pion.move();
     }
 }
