@@ -1,5 +1,6 @@
 package com.chess.pieces;
 
+import com.chess.board.ChessBoard;
 import com.chess.enums.Color;
 import com.chess.enums.PieceName;
 import lombok.AllArgsConstructor;
@@ -17,7 +18,7 @@ public abstract class Piece {
     private final int point;
     private Position position;
 
-    abstract void move();
+    abstract void move(ChessBoard chessBoard);
 
-    abstract void attack();
+    abstract void attack(ChessBoard chessBoard);
 }

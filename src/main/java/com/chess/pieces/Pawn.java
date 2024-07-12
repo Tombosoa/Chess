@@ -1,5 +1,6 @@
 package com.chess.pieces;
 
+import com.chess.board.ChessBoard;
 import com.chess.cases.Case;
 import com.chess.enums.AlphabeticalReference;
 import com.chess.enums.Color;
@@ -19,7 +20,7 @@ public class Pawn extends Piece{
     }
 
     @Override
-    protected void move() {
+    protected void move(ChessBoard chessBoard) {
         List<Case> possibleMoves = new ArrayList<>();
         if (this.getColor() == Color.white) {
             Case forward = new Case(NumericalReference.increment(this.getPosition().getCurrentPosition().getNumericalReference()), this.getPosition().getCurrentPosition().getAlphabeticalReference());
@@ -41,7 +42,7 @@ public class Pawn extends Piece{
     }
 
     @Override
-    protected void attack() {
+    protected void attack(ChessBoard chessBoard) {
         List<Case> possibleAttackPositions = new ArrayList<>();
         if (this.getColor() == Color.white) {
             Case leftCapture = new Case(NumericalReference.decrement(this.getPosition().getCurrentPosition().getNumericalReference()), this.getPosition().getCurrentPosition().getAlphabeticalReference().left());
@@ -73,19 +74,20 @@ public class Pawn extends Piece{
     }
 
     public static void main(String[] args) {
+        ChessBoard bd = new ChessBoard();
         Case cases = new Case(NumericalReference.TWO, AlphabeticalReference.e);
         Case cases1 = new Case(NumericalReference.TWO, AlphabeticalReference.f);
 
         Position position = new Position(cases);
-        Position position1 = new Position(cases1);
+        // Position position1 = new Position(cases1);
 
         Pawn pion = new Pawn(Color.white, position);
-        Pawn pion1 = new Pawn(Color.white, position1);
+       // Pawn pion1 = new Pawn(Color.white, position1);
 
-         pion.move();
+         pion.move(bd);
         // pion.attack();
-        pion.move();
-        pion.move();
-        pion.move();
+        pion.move(bd);
+        pion.move(bd);
+        pion.move(bd);
     }
 }
