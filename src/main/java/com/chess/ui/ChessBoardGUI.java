@@ -61,9 +61,8 @@ public class ChessBoardGUI extends JFrame {
         System.out.println(chessBoard.getCase(row, col));
     }
 
-    public static void main(String[] args) {
+    public static void draw(){
         ChessBoard chessBoard = new ChessBoard();
         SwingUtilities.invokeLater(() -> new ChessBoardGUI(chessBoard));
     }
 }
-
