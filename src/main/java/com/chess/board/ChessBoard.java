@@ -5,9 +5,11 @@ import com.chess.enums.AlphabeticalReference;
 import com.chess.enums.Color;
 import com.chess.enums.NumericalReference;
 import com.chess.pieces.Pawn;
+import com.chess.pieces.Position;
 
 public class ChessBoard {
     private final Case[][] board;
+    private Pawn pawn;
 
     public ChessBoard() {
         board = new Case[8][8];
@@ -57,5 +59,8 @@ public class ChessBoard {
 
     public void setPiece(int row, int column, Pawn pawn) {
         getCase(row, column).setBusy(true);
+        Position position = new Position(getCase(row, column));
+        pawn.setPosition(position);
+        getCase(row, column).addPiece(pawn);
     }
 }
