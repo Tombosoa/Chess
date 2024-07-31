@@ -16,7 +16,7 @@ import java.util.List;
 @Getter
 public class Pawn extends Piece{
     public Pawn(Color color, Position position) {
-        super(PieceName.pawn, color, 1, position);
+        super(PieceName.pawn, color, 1, position, color.equals(Color.black) ? "blackPawn.png" : "whitePawn.png");
     }
 
     @Override
@@ -84,10 +84,14 @@ public class Pawn extends Piece{
         Pawn pion = new Pawn(Color.white, position);
        // Pawn pion1 = new Pawn(Color.white, position1);
 
-         pion.move(bd);
+       // pion.move(bd);
         // pion.attack();
-        pion.move(bd);
-        pion.move(bd);
-        pion.move(bd);
+       // pion.move(bd);
+        //pion.move(bd);
+        //pion.move(bd);
+       // System.out.println(pion.getImageIcon().toString());
+        //System.out.println(position.getCurrentPosition().addPiece(pion));
+        System.out.println(position.getCurrentPosition().getPiece());
+
     }
 }
