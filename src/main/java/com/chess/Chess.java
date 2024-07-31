@@ -7,6 +7,7 @@ import com.chess.enums.Color;
 import com.chess.enums.NumericalReference;
 import com.chess.pieces.Pawn;
 import com.chess.pieces.Position;
+import com.chess.ui.ChessBoardGUI;
 
 import java.util.List;
 import java.util.*;
@@ -49,12 +50,17 @@ public class Chess {
         board.printBoard();
     }
 
-    public Case getCase(int row, int column) {
+    public Case getItCase(int row, int column) {
         return boards[row][column];
     }
 
+    public ChessBoard getChessBoard(){
+        return board;
+    }
+/*
     public static void main(String[] args) {
         Chess game = new Chess();
+       // ChessBoardGUI.draw();
         game.displayBoard();
-    }
+    }*/
 }
