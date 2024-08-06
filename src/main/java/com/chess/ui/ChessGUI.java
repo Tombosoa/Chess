@@ -6,6 +6,8 @@ import com.chess.pieces.Position;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
@@ -32,6 +34,14 @@ public class ChessGUI extends JFrame {
                 final int finalCol = col;
                 squares[row][col] = new JPanel();
                 squares[row][col].setBackground(getBackgroundForColor(chess.getChessBoard().getCase(row, col).getColor()));
+
+                squares[row][col].addComponentListener(new ComponentAdapter() {
+                    @Override
+                    public void componentResized(ComponentEvent e) {
+                        refreshSquare(finalRow, finalCol);
+                    }
+                });
+
                 squares[row][col].addMouseListener(new MouseAdapter() {
                     @Override
                     public void mouseClicked(MouseEvent e) {
@@ -55,22 +65,34 @@ public class ChessGUI extends JFrame {
     private void refreshBoard() {
         for (int row = 0; row < squares.length; row++) {
             for (int col = 0; col < squares[row].length; col++) {
-                squares[row][col].removeAll();
-                squares[row][col].setBackground(getBackgroundForColor(chess.getChessBoard().getCase(row, col).getColor()));
-                Position position = new Position(chess.initializeBoard().getCase(row, col));
-                Piece piece = chess.initializeBoard().getCase(row, col).getPiece();
-                position.getCurrentPosition().setPiece(piece);
-                if (piece != null) {
-                    ImageIcon icon = loadImageIcon(piece.getImg());
-                    if (icon != null) {
-                        JLabel label = new JLabel(icon);
-                        squares[row][col].add(label);
-                    }
-                }
-                squares[row][col].revalidate();
-                squares[row][col].repaint();
+                refreshSquare(row, col);
             }
         }
+    }
+
+    private void refreshSquare(int row, int col) {
+        squares[row][col].removeAll();
+        squares[row][col].setBackground(getBackgroundForColor(chess.getChessBoard().getCase(row, col).getColor()));
+        Piece piece = chess.getChessBoard().getCase(row, col).getPiece();
+        if (piece != null) {
+            ImageIcon icon = loadImageIcon(piece.getImg());
+            if (icon != null) {
+                int width = squares[row][col].getWidth();
+                int height = squares[row][col].getHeight();
+
+                if (width > 0 && height > 0) {
+                    Image img = icon.getImage();
+                    Image resizedImg = img.getScaledInstance(width, height, Image.SCALE_SMOOTH);
+                    ImageIcon resizedIcon = new ImageIcon(resizedImg);
+
+                    JLabel label = new JLabel(resizedIcon);
+                    squares[row][col].add(label);
+                }
+            }
+        }
+
+        squares[row][col].revalidate();
+        squares[row][col].repaint();
     }
 
     private ImageIcon loadImageIcon(String fileName) {
