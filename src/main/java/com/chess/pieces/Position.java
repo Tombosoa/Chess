@@ -10,7 +10,9 @@ public class Position {
 
     public Position(Case currentPosition) {
         this.currentPosition = currentPosition;
-        currentPosition.setBusy(true);
+        if(currentPosition.getPiece() != null){
+            currentPosition.setBusy(true);
+        }
     }
 
     public void setCurrentPosition(Case newPosition) {

@@ -1,7 +1,6 @@
 package com.chess.ui;
 
 import com.chess.Chess;
-import com.chess.board.ChessBoard;
 import com.chess.pieces.Piece;
 import com.chess.pieces.Position;
 
@@ -56,15 +55,31 @@ public class ChessGUI extends JFrame {
     private void refreshBoard() {
         for (int row = 0; row < squares.length; row++) {
             for (int col = 0; col < squares[row].length; col++) {
+                squares[row][col].removeAll();
                 squares[row][col].setBackground(getBackgroundForColor(chess.getChessBoard().getCase(row, col).getColor()));
-                Position position = new Position(chess.getChessBoard().getCase(row, col));
-                Piece piece = chess.getChessBoard().getCase(row, col).getPiece();
-
-                position.getCurrentPosition().addPiece(piece);
-                ImageIcon icon = position.getCurrentPosition().getPiece().getImageIcon();
-                JLabel label = new JLabel(icon);
-                squares[row][col].add(label);
+                Position position = new Position(chess.initializeBoard().getCase(row, col));
+                Piece piece = chess.initializeBoard().getCase(row, col).getPiece();
+                position.getCurrentPosition().setPiece(piece);
+                if (piece != null) {
+                    ImageIcon icon = loadImageIcon(piece.getImg());
+                    if (icon != null) {
+                        JLabel label = new JLabel(icon);
+                        squares[row][col].add(label);
+                    }
+                }
+                squares[row][col].revalidate();
+                squares[row][col].repaint();
             }
+        }
+    }
+
+    private ImageIcon loadImageIcon(String fileName) {
+        java.net.URL imgURL = getClass().getClassLoader().getResource("images/" + fileName);
+        if (imgURL != null) {
+            return new ImageIcon(imgURL);
+        } else {
+            System.err.println("Couldn't find file: " + fileName);
+            return null;
         }
     }
 
@@ -73,7 +88,7 @@ public class ChessGUI extends JFrame {
         System.out.println(chess.getChessBoard().getCase(row, col).getPiece());
     }
 
-    public static void draw(){
+    public static void draw() {
         Chess chess = new Chess();
         SwingUtilities.invokeLater(() -> new ChessGUI(chess));
     }

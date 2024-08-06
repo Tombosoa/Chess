@@ -38,22 +38,18 @@ public abstract class Piece {
         this.color = color;
         position.getCurrentPosition().setPiece(this);
     }
-    public ImageIcon getImageIcon() {
-        if (this.img != null) {
-            return new ImageIcon("chessUtils/" + this.img);
-        }
-        return null;
-    }
+
     abstract void move(ChessBoard chessBoard);
 
     abstract void attack(ChessBoard chessBoard);
 
-    public static void main(String[] args) {
+  /*  public static void main(String[] args) {
         Case cases = new Case(NumericalReference.TWO, AlphabeticalReference.e);
 
         Position position = new Position(cases);
 
         Pawn pion = new Pawn(Color.white, position);
-        System.out.println(pion.getPosition().getCurrentPosition().getPiece());
-    }
+        position.getCurrentPosition().setPiece(pion);
+        System.out.println(position.getCurrentPosition().getPiece().getImg());
+    }*/
 }

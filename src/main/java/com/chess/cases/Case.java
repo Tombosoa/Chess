@@ -33,7 +33,7 @@ public class Case{
     }
 
     public Piece addPiece(Piece piece){
-        this.piece = piece;
+        this.setPiece(piece);
         return piece;
     }
 }
