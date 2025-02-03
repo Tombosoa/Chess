@@ -3,6 +3,8 @@ package com.chess.pieces;
 import com.chess.cases.Case;
 import lombok.AllArgsConstructor;
 
+import java.util.Objects;
+
 @AllArgsConstructor
 public class Position {
     private Case currentPosition;
@@ -44,5 +46,18 @@ public class Position {
         }
 
         return sb.toString();
+    }
+
+    @Override
+    public boolean equals(Object object) {
+        if (this == object) return true;
+        if (object == null || getClass() != object.getClass()) return false;
+        Position position = (Position) object;
+        return Objects.equals(currentPosition, position.currentPosition) && Objects.equals(previousPosition, position.previousPosition);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(currentPosition, previousPosition);
     }
 }
