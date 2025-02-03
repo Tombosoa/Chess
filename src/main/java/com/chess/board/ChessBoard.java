@@ -4,12 +4,11 @@ import com.chess.cases.Case;
 import com.chess.enums.AlphabeticalReference;
 import com.chess.enums.Color;
 import com.chess.enums.NumericalReference;
-import com.chess.pieces.Pawn;
+import com.chess.pieces.Piece;
 import com.chess.pieces.Position;
 
 public class ChessBoard {
-    private final Case[][] board;
-    private Pawn pawn;
+    private final Case[][] board ;
 
     public ChessBoard() {
         board = new Case[8][8];
@@ -42,11 +41,6 @@ public class ChessBoard {
         }
     }
 
-    public static void main(String[] args) {
-        ChessBoard bd = new ChessBoard();
-        System.out.println(bd.getCase(0, 0));
-    }
-
     public String[][] getBoardState() {
         String[][] boardState = new String[8][8];
         for (int i = 0; i < 8; i++) {
@@ -57,10 +51,11 @@ public class ChessBoard {
         return boardState;
     }
 
-    public void setPiece(int row, int column, Pawn pawn) {
-        getCase(row, column).setBusy(true);
+    public void setPiece(int row, int column, Piece piece) {
+        piece.getPosition().getCurrentPosition().setBusy(true);
+        //getCase(row, column).setBusy(true);
         Position position = new Position(getCase(row, column));
-        pawn.setPosition(position);
-        getCase(row, column).addPiece(pawn);
+        piece.setPosition(position);
+        getCase(row, column).addPiece(piece);
     }
 }

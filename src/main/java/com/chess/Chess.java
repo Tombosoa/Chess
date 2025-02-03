@@ -5,53 +5,61 @@ import com.chess.cases.Case;
 import com.chess.enums.AlphabeticalReference;
 import com.chess.enums.Color;
 import com.chess.enums.NumericalReference;
-import com.chess.pieces.Pawn;
-import com.chess.pieces.Position;
-import com.chess.ui.ChessBoardGUI;
+import com.chess.pieces.*;
+import com.chess.pieces.services.*;
 
 import java.util.List;
-import java.util.*;
 
 public class Chess {
     private final ChessBoard board;
-    private final Case[][] boards;
-
+    BishopService bishopService = new BishopService();
+    RookService rookService = new RookService();
+    PawnService pawnService = new PawnService();
+    KnightService knightService = new KnightService();
+    KingService kingService = new KingService();
+    QueenService queenService = new QueenService();
     public Chess() {
         board = new ChessBoard();
-        boards = new Case[8][8];
         initializeBoard();
     }
 
-    public ChessBoard initializeBoard() {
-        List<Pawn> whitePawns = new ArrayList<>();
-        List<Pawn> blackPawns = new ArrayList<>();
+    public void setPieceOnBoard(Piece piece){
+        board.setPiece( piece.getPosition().getCurrentPosition().getNumericalReference().getValue() - 1 , piece.getPosition().getCurrentPosition().getAlphabeticalReference().ordinal(), piece);
+    }
 
-        for (int i = 0; i < 8; i++) {
-            Case wCase = new Case(NumericalReference.EIGHT, AlphabeticalReference.values()[i]);
-
-            Position wPosition = new Position(wCase);
-            Pawn whitePawn = new Pawn(Color.white, wPosition);
-
-            Case bCase = new Case(NumericalReference.ONE, AlphabeticalReference.values()[i]);
-
-            Position bPosition = new Position(bCase);
-            Pawn blackPawn = new Pawn(Color.black, bPosition);
-
-            whitePawns.add(whitePawn);
-            blackPawns.add(blackPawn);
-
-            board.setPiece(1, i, whitePawn);
-            board.setPiece(6, i, blackPawn);
+    public void setMultiplePiece(List<Piece> pieces){
+        for (Piece piece : pieces){
+            setPieceOnBoard(piece);
         }
+    }
+
+    public ChessBoard initializeBoard() {
+        List<Piece> pawns = pawnService.getPawns();
+        List<Piece> bishops = bishopService.getBishops();
+        List<Piece> rooks = rookService.getRooks();
+        List<Piece> knights = knightService.getKnights();
+        List<Piece> kings = kingService.getKings();
+        List<Piece> queens = queenService.getQueens();
+
+        Case cases = new Case(NumericalReference.FOUR, AlphabeticalReference.e);
+        Position position = new Position(cases);
+        Piece rook = new Knight(Color.white, position);
+
+        Case bcases = new Case(NumericalReference.FIVE, AlphabeticalReference.f);
+        Position bposition = new Position(bcases);
+        Piece brook = new Knight(Color.black, bposition);
+
+       // setPieceOnBoard(rook, board);
+        setPieceOnBoard(brook);
+
+        setMultiplePiece(bishops);
+        setMultiplePiece(rooks);
+        setMultiplePiece(pawns);
+        setMultiplePiece(knights);
+        setMultiplePiece(kings);
+        setMultiplePiece(queens);
+
         return board;
-    }
-
-    public void displayBoard() {
-        board.printBoard();
-    }
-
-    public Case getItCase(int row, int column) {
-        return boards[row][column];
     }
 
     public ChessBoard getChessBoard(){
@@ -60,8 +68,6 @@ public class Chess {
 
     public static void main(String[] args) {
         Chess game = new Chess();
-       // ChessBoardGUI.draw();
-        //game.displayBoard();
         System.out.println(game.initializeBoard().getCase(1,2));
     }
 }
