@@ -13,9 +13,10 @@ public enum NumericalReference {
     }
 
     public static NumericalReference increment(NumericalReference reference) {
-        int newValue = reference.getValue() + 1;
-        if (newValue <= 8) {
-            return NumericalReference.values()[newValue - 1];
+        int newValue = reference.getValue() - 1;
+        if (newValue < 8) {
+            newValue += 1;
+            return NumericalReference.values()[newValue ];
         }
         throw new IllegalArgumentException("Increment beyond board limits");
     }
