@@ -4,6 +4,8 @@ import com.chess.Chess;
 import com.chess.cases.Case;
 import com.chess.pieces.Piece;
 import com.chess.pieces.Position;
+import lombok.Getter;
+import lombok.Setter;
 
 import javax.swing.*;
 import java.awt.*;
@@ -29,6 +31,10 @@ public class ChessGUI extends JFrame {
         isClicked = clicked;
     }
 
+    @Getter
+    @Setter
+    private Piece clickedPiece = null;
+
     public boolean isClicked() {
         return isClicked;
     }
@@ -50,7 +56,7 @@ public class ChessGUI extends JFrame {
             for (int col = 0; col < squares[row].length; col++) {
                 final int finalRow = row;
                 final int finalCol = col;
-                squares[row][col] = new JPanel();
+                squares[row][col] = new JPanel(new BorderLayout());
                 squares[row][col].setBackground(getBackgroundForColor(chess.getChessBoard().getCase(row, col).getColor()));
                 chess.getChessBoard().getCase(row, col).setColor(chess.getChessBoard().getCase(row, col).getColor());
                 squares[row][col].addComponentListener(new ComponentAdapter() {
@@ -74,8 +80,8 @@ public class ChessGUI extends JFrame {
 
     private Color getBackgroundForColor(com.chess.enums.Color color) {
         return switch (color) {
-            case black -> Color.BLACK;
-            case white -> Color.WHITE;
+            case black -> new Color(118, 150, 86);
+            case white -> new Color(238, 238, 210);
             default -> throw new IllegalArgumentException("Invalid color");
         };
     }
@@ -107,7 +113,9 @@ public class ChessGUI extends JFrame {
                     ImageIcon resizedIcon = new ImageIcon(resizedImg);
 
                     JLabel label = new JLabel(resizedIcon);
-                    squares[row][col].add(label);
+                    label.setHorizontalAlignment(JLabel.CENTER);
+                    label.setVerticalAlignment(JLabel.CENTER);
+                    squares[row][col].add(label, BorderLayout.CENTER);
                 }
             }
         }
@@ -128,69 +136,58 @@ public class ChessGUI extends JFrame {
 
     private void handleSquareClick(int row, int col) {
         Case currentCase = chess.getChessBoard().getCase(row, col);
-        Piece piece = chess.getChessBoard().getCase(row, col).getPiece();
+        Piece clicked = currentCase.getPiece();
 
-        if (!currentCase.isBusy()){
-                if(selectedPiece.getPossibleMove(selectedPiece.getPosition().getCurrentPosition()).contains(currentCase)){
-                    choosePosition(currentCase, selectedPiece);
-                    resetPreviousSquare(selectedPiece);
+        if (selectedPiece != null) {
+            if (selectedPiece.getPossibleMove(selectedPiece.getPosition().getCurrentPosition()).contains(currentCase)) {
+                if (clicked != null && clicked.getColor() == selectedPiece.getColor()) {
+                    return;
                 }
-            System.out.println("there is no piece");
-        }else{
-            handlePieceClick(piece);
-        }
-    }
 
-    private void resetPreviousSquare(Piece piece){
-        JPanel square = squares[piece.getPosition().getCurrentPosition().getRow() - 1][piece.getPosition().getCurrentPosition().getCol()];
-        ImageIcon icon = loadImageIcon(piece.getImg());
-
-        if (icon != null) {
-            Image img = icon.getImage();
-            int width = square.getWidth();
-            int height = square.getHeight();
-            Image resizedImg = img.getScaledInstance(width, height, Image.SCALE_SMOOTH);
-            ImageIcon resizedIcon = new ImageIcon(resizedImg);
-
-            JLabel label = new JLabel(resizedIcon);
-            square.remove(label);
-            System.out.println("remove the label at " + piece.getPosition().getCurrentPosition());
+                choosePosition(currentCase, selectedPiece);
+                resetHighlightedCases();
+                selectedPiece = null;
+                return;
+            }
         }
 
-        refreshSquare(piece.getPosition().getCurrentPosition().getRow() - 1, piece.getPosition().getCurrentPosition().getCol());
+        if (clicked != null) {
+            handlePieceClick(clicked);
+        }
     }
 
     private void handlePieceClick(Piece piece) {
-        Position currentPosition = piece.getPosition();
-        if (selectedPiece != null && selectedPiece != piece) {
-            resetHighlightedCases();
+        if (isClicked && selectedPiece == piece) {
             setClicked(false);
+            resetHighlightedCases();
+            selectedPiece = null;
+            return;
         }
 
+        setClicked(true);
         selectedPiece = piece;
+        resetHighlightedCases();
 
-        if (!isClicked) {
-            setClicked(true);
-            highlightedCases = piece.getPossibleMove(piece.getPosition().getCurrentPosition());
+        List<Case> possibleMoves = piece.getPossibleMove(piece.getPosition().getCurrentPosition());
+        highlightedCases = new ArrayList<>();
 
-            //System.out.println("Possibles moves");
-            for (Case cs : highlightedCases) {
+        setClickedPiece(piece);
+        clickedPiece.addToAllMove(piece.getPosition());
+
+        for (Case cs : possibleMoves) {
+            Piece p = cs.getPiece();
+            if (p == null || p.getColor() != piece.getColor()) {
+                highlightedCases.add(cs);
                 JPanel square = squares[cs.getRow() - 1][cs.getCol()];
-
                 originalColors.put(cs, square.getBackground());
                 square.setBackground(Color.ORANGE);
             }
-        } else {
-            setClicked(false);
-            resetHighlightedCases();
-            piece.setPosition(currentPosition);
         }
     }
 
     private void resetHighlightedCases() {
         for (Case cs : highlightedCases) {
             JPanel square = squares[cs.getRow() - 1][cs.getCol()];
-
             Color originalColor = originalColors.get(cs);
             if (originalColor != null) {
                 square.setBackground(originalColor);
@@ -200,14 +197,16 @@ public class ChessGUI extends JFrame {
         originalColors.clear();
     }
 
-    private void choosePosition(Case cases, Piece piece){
-        JPanel square = squares[cases.getRow() - 1][cases.getCol()];
-        square.setBackground(Color.RED);
+    private void choosePosition(Case cases, Piece piece) {
+        if (piece.getPosition() != null && piece.getPosition().getCurrentPosition() != null) {
+            piece.getPosition().getCurrentPosition().removePiece();
+        }
 
         cases.addPiece(piece);
-        refreshSquare(cases.getRow() - 1, cases.getCol());
+        piece.setPosition(new Position(cases));
 
-        System.out.println("you choose: " + cases);
+        setClicked(false);
+        refreshBoard();
     }
 
     public static void draw() {

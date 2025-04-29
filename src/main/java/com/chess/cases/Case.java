@@ -47,6 +47,11 @@ public class Case{
         return piece;
     }
 
+    public void removePiece(){
+        //System.out.println("remove the piece: "+this.getPiece());
+        setPiece(null);
+    }
+
     @Override
     public boolean equals(Object object) {
         if (this == object) return true;
