@@ -11,8 +11,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Knight extends Piece{
-    public Knight( Color color, Position position) {
-        super(PieceName.knight, color, 2, position, color.equals(Color.black) ? "blackKnight.png" : "whiteKnight.png");
+    public Knight( Color color, Position position, ChessBoard board) {
+        super(PieceName.knight, color, 2, position, color.equals(Color.black) ? "blackKnight.png" : "whiteKnight.png", board);
     }
 
     @Override

@@ -19,6 +19,7 @@ public abstract class Piece {
     private final int point;
     private Position position;
     private String img;
+    private final ChessBoard chessBoard;
 
     private final List<Position> historic = new ArrayList<>();
 

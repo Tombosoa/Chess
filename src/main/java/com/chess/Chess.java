@@ -1,10 +1,6 @@
 package com.chess;
 
 import com.chess.board.ChessBoard;
-import com.chess.cases.Case;
-import com.chess.enums.AlphabeticalReference;
-import com.chess.enums.Color;
-import com.chess.enums.NumericalReference;
 import com.chess.pieces.*;
 import com.chess.pieces.services.*;
 
@@ -34,12 +30,12 @@ public class Chess {
     }
 
     public ChessBoard initializeBoard() {
-        List<Piece> pawns = pawnService.getPawns();
-        List<Piece> bishops = bishopService.getBishops();
-        List<Piece> rooks = rookService.getRooks();
-        List<Piece> knights = knightService.getKnights();
-        List<Piece> kings = kingService.getKings();
-        List<Piece> queens = queenService.getQueens();
+        List<Piece> pawns = pawnService.getPawns(board);
+        List<Piece> bishops = bishopService.getBishops(board);
+        List<Piece> rooks = rookService.getRooks(board);
+        List<Piece> knights = knightService.getKnights(board);
+        List<Piece> kings = kingService.getKings(board);
+        List<Piece> queens = queenService.getQueens(board);
 
        // setPieceOnBoard(rook, board);
        //Test for Knight: setPieceOnBoard(brook);

@@ -1,6 +1,5 @@
 package com.chess.pieces;
 
-import com.chess.Chess;
 import com.chess.board.ChessBoard;
 import com.chess.cases.Case;
 import com.chess.enums.Color;
@@ -18,12 +17,10 @@ public class Pawn extends Piece {
     private List<Case> positions;
     private final ChessBoard board;
 
-    //private final ChessBoard cb = new Chess().getChessBoard();
-
-    public Pawn(Color color, Position position) {
-        super(PieceName.pawn, color, 1, position, color.equals(Color.black) ? "blackPawn.png" : "whitePawn.png");
+    public Pawn(Color color, Position position, ChessBoard board) {
+        super(PieceName.pawn, color, 1, position, color.equals(Color.black) ? "blackPawn.png" : "whitePawn.png", board);
         this.positions = new ArrayList<>();
-        this.board = new ChessBoard();
+        this.board = board;
     }
 
     private boolean hasMoved() {
@@ -32,38 +29,7 @@ public class Pawn extends Piece {
 
     @Override
     public void move(ChessBoard chessBoard) {
-        List<Case> possibleMoves = new ArrayList<>();
-        Case forward = null;
 
-        if (this.getColor() == Color.white) {
-            forward = new Case(NumericalReference.increment(this.getPosition().getCurrentPosition().getNumericalReference()), this.getPosition().getCurrentPosition().getAlphabeticalReference());
-            if (forward.isValid() && !forward.isBusy()) {
-                possibleMoves.add(forward);
-                positions.add(forward);
-            }
-        } else {
-            forward = new Case(NumericalReference.decrement(this.getPosition().getCurrentPosition().getNumericalReference()), this.getPosition().getCurrentPosition().getAlphabeticalReference());
-            if (forward.isValid() && !forward.isBusy()) {
-                possibleMoves.add(forward);
-                positions.add(forward);
-            }
-        }
-
-        if (!hasMoved()) {
-            Case secondForward = this.getColor() == Color.white
-                    ? new Case(NumericalReference.increment(forward.getNumericalReference()), forward.getAlphabeticalReference())
-                    : new Case(NumericalReference.decrement(forward.getNumericalReference()), forward.getAlphabeticalReference());
-
-            if (secondForward.isValid() && !secondForward.isBusy()) {
-                possibleMoves.add(secondForward);
-                positions.add(secondForward);
-            }
-        }
-
-        if (!possibleMoves.isEmpty()) {
-            this.getPosition().setCurrentPosition(possibleMoves.get(0));
-            //this.getHistoric().add(this.getPosition());
-        }
     }
 
     @Override
@@ -73,8 +39,9 @@ public class Pawn extends Piece {
         Case forward = this.getColor() == Color.white
                 ? new Case(NumericalReference.increment(currentCase.getNumericalReference()), currentCase.getAlphabeticalReference())
                 : new Case(NumericalReference.decrement(currentCase.getNumericalReference()), currentCase.getAlphabeticalReference());
+        Case dForward = board.getCase(forward.getRow() - 1, forward.getCol());
 
-        if (forward.isValid() && !forward.isBusy()) {
+        if (dForward.isValid() && !dForward.isBusy()) {
             possibleMoves.add(forward);
         }
 
@@ -82,83 +49,56 @@ public class Pawn extends Piece {
             Case secondForward = this.getColor() == Color.white
                     ? new Case(NumericalReference.increment(forward.getNumericalReference()), currentCase.getAlphabeticalReference())
                     : new Case(NumericalReference.decrement(forward.getNumericalReference()), currentCase.getAlphabeticalReference());
-
+            Case dSecondForward = board.getCase(secondForward.getRow() - 1, secondForward.getCol());
             if(board.getCase(secondForward.getRow(), secondForward.getCol()).getColor().equals(Color.black)){
                 secondForward.setColor(Color.white);
             }else{
                 secondForward.setColor(Color.black);
             }
-            if (secondForward.isValid() && !secondForward.isBusy()) {
-                possibleMoves.add(secondForward);
+
+            if (dSecondForward.isValid() && !dSecondForward.isBusy()) {
+                if(!dForward.isBusy()){
+                    possibleMoves.add(secondForward);
+                }
             }
         }
-        /*
-        Case leftCapture = this.getColor() == Color.white ?
-                board.getCase(currentCase.getRow(), currentCase.getCol()-1) :
-                board.getCase(currentCase.getRow() - 1, currentCase.getCol()-1);
-        if (leftCapture.isValid() && leftCapture.isBusy()) {
-            possibleMoves.add(leftCapture);
+
+        try {
+            int leftRow = this.getColor() == Color.white ? currentCase.getRow() : currentCase.getRow() - 2;
+            int leftCol = currentCase.getCol() - 1;
+
+            if (leftCol >= 0) {
+                Case leftCapture = board.getCase(leftRow, leftCol);
+                if (leftCapture != null && leftCapture.isValid() && leftCapture.isBusy()
+                        && leftCapture.getPiece().getColor() != this.getColor()) {
+                    possibleMoves.add(leftCapture);
+                }
+            }
+        } catch (Exception ignored) {
+
         }
 
-        Case rightCapture = this.getColor() == Color.white ?
-                board.getCase(currentCase.getRow(), currentCase.getCol()+1) :
-                board.getCase(currentCase.getRow()-1, currentCase.getCol()+1);
-        if (rightCapture.isValid() && rightCapture.isBusy()) {
-            possibleMoves.add(rightCapture);
-        }*/
-        //System.out.println(board.getCase(currentCase.getRow() - 1, currentCase.getCol()));
+        try {
+            int rightRow = this.getColor() == Color.white ? currentCase.getRow() : currentCase.getRow() - 2;
+            int rightCol = currentCase.getCol() + 1;
 
-        //System.out.println(cb.getCase(currentCase.getRow(),currentCase.getCol()));
+            if (rightCol < 8) {
+                Case rightCapture = board.getCase(rightRow, rightCol);
+                if (rightCapture != null && rightCapture.isValid() && rightCapture.isBusy()
+                        && rightCapture.getPiece().getColor() != this.getColor()) {
+                    possibleMoves.add(rightCapture);
+                }
+            }
+        } catch (Exception ignored) {
+
+        }
+
         return possibleMoves;
     }
 
     @Override
     protected void attack(ChessBoard chessBoard) {
-        List<Case> possibleAttackPositions = new ArrayList<>();
 
-        if (this.getColor() == Color.white) {
-            Case leftCapture = new Case(NumericalReference.decrement(this.getPosition().getCurrentPosition().getNumericalReference()), this.getPosition().getCurrentPosition().getAlphabeticalReference().left());
-            if (leftCapture.isValid() && leftCapture.isBusy()) {
-                possibleAttackPositions.add(leftCapture);
-            }
-
-            Case rightCapture = new Case(NumericalReference.increment(this.getPosition().getCurrentPosition().getNumericalReference()), this.getPosition().getCurrentPosition().getAlphabeticalReference().right());
-            if (rightCapture.isValid() && rightCapture.isBusy()) {
-                possibleAttackPositions.add(rightCapture);
-            }
-        } else {
-            Case leftCapture = new Case(NumericalReference.increment(this.getPosition().getCurrentPosition().getNumericalReference()), this.getPosition().getCurrentPosition().getAlphabeticalReference().left());
-            if (leftCapture.isValid() && leftCapture.isBusy()) {
-                possibleAttackPositions.add(leftCapture);
-            }
-
-            Case rightCapture = new Case(NumericalReference.decrement(this.getPosition().getCurrentPosition().getNumericalReference()), this.getPosition().getCurrentPosition().getAlphabeticalReference().right());
-            if (rightCapture.isValid() && rightCapture.isBusy()) {
-                possibleAttackPositions.add(rightCapture);
-            }
-        }
-
-        if (!possibleAttackPositions.isEmpty()) {
-            this.getPosition().setCurrentPosition(possibleAttackPositions.get(0));
-        }
     }
-/*
-    protected List<Case> attack() {
-        List<Case> possibleMoves = new ArrayList<>();
-        ChessBoard chessBoard = new Chess().getChessBoard();
-        Case leftCapture = this.getColor() == Color.white ?
-                chessBoard.getCase(this.getPosition().getCurrentPosition().getRow(), this.getPosition().getCurrentPosition().getCol()-1) :
-                board.getCase(this.getPosition().getCurrentPosition().getRow() - 1, this.getPosition().getCurrentPosition().getCol()-1);
-        if (leftCapture.isValid() && leftCapture.isBusy()) {
-            possibleMoves.add(leftCapture);
-        }
 
-        Case rightCapture = this.getColor() == Color.white ?
-                board.getCase(this.getPosition().getCurrentPosition().getRow(), this.getPosition().getCurrentPosition().getCol()+1) :
-                board.getCase(this.getPosition().getCurrentPosition().getRow()-1, this.getPosition().getCurrentPosition().getCol()+1);
-        if (rightCapture.isValid() && rightCapture.isBusy()) {
-            possibleMoves.add(rightCapture);
-        }
-        return possibleMoves;
-    }*/
 }

@@ -7,8 +7,31 @@ import com.chess.enums.NumericalReference;
 import com.chess.pieces.Piece;
 import com.chess.pieces.Position;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class ChessBoard {
     private final Case[][] board ;
+    public List<Piece> getAdjacentPieces(Position position) {
+        List<Piece> adjacentPieces = new ArrayList<>();
+        int row = position.getCurrentPosition().getRow();
+        int col = position.getCurrentPosition().getCol();
+
+        for (int i = -1; i <= 1; i++) {
+            for (int j = -1; j <= 1; j++) {
+                if (i == 0 && j == 0) continue;
+                int newRow = row + i;
+                int newCol = col + j;
+                if (newRow >= 0 && newRow < 8 && newCol >= 0 && newCol < 8) {
+                    Case adjacentCase = board[newRow][newCol];
+                    if (adjacentCase.getPiece() != null) {
+                        adjacentPieces.add(adjacentCase.getPiece());
+                    }
+                }
+            }
+        }
+        return adjacentPieces;
+    }
 
     public ChessBoard() {
         board = new Case[8][8];

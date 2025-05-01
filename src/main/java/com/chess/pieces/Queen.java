@@ -10,8 +10,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Queen extends Piece{
-    public Queen( Color color,  Position position) {
-        super(PieceName.queen, color, 4, position, color.equals(Color.black) ? "blackQueen.png" : "whiteQueen.png");
+    public Queen( Color color,  Position position, ChessBoard board) {
+        super(PieceName.queen, color, 4, position, color.equals(Color.black) ? "blackQueen.png" : "whiteQueen.png", board);
     }
 
     @Override

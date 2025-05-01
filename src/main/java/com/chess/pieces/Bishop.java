@@ -11,8 +11,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Bishop extends Piece{
-    public Bishop(Color color, Position position) {
-        super(PieceName.bishop, color, 2, position, color.equals(Color.black) ? "blackBishop.png" : "whiteBishop.png");
+    public Bishop(Color color, Position position, ChessBoard board) {
+        super(PieceName.bishop, color, 2, position, color.equals(Color.black) ? "blackBishop.png" : "whiteBishop.png", board);
     }
 
     @Override

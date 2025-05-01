@@ -1,5 +1,6 @@
 package com.chess.pieces.services;
 
+import com.chess.board.ChessBoard;
 import com.chess.cases.Case;
 import com.chess.enums.AlphabeticalReference;
 import com.chess.enums.Color;
@@ -12,7 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class PawnService {
-    public List<Piece> getPawns() {
+    public List<Piece> getPawns(ChessBoard board) {
         List<Piece> pawns = new ArrayList<>();
 
         for (int i = 0; i < 8; i++) {
@@ -20,13 +21,13 @@ public class PawnService {
             wCase.setColor(Color.white);
 
             Position wPosition = new Position(wCase);
-            Pawn whitePawn = new Pawn(Color.white, wPosition);
+            Pawn whitePawn = new Pawn(Color.white, wPosition, board);
 
             Case bCase = new Case(NumericalReference.SEVEN, AlphabeticalReference.values()[i]);
             bCase.setColor(Color.black);
 
             Position bPosition = new Position(bCase);
-            Pawn blackPawn = new Pawn(Color.black, bPosition);
+            Pawn blackPawn = new Pawn(Color.black, bPosition, board);
 
             pawns.add(whitePawn);
             pawns.add(blackPawn);

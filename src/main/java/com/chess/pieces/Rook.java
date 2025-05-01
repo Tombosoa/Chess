@@ -15,8 +15,8 @@ import java.util.List;
 @Getter
 @ToString
 public class Rook extends Piece{
-    public Rook(Color color, Position position) {
-        super(PieceName.rook, color, 2, position, color.equals(Color.black) ? "blackRook.png" : "whiteRook.png");
+    public Rook(Color color, Position position, ChessBoard board) {
+        super(PieceName.rook, color, 2, position, color.equals(Color.black) ? "blackRook.png" : "whiteRook.png", board);
     }
 
     @Override
@@ -32,20 +32,7 @@ public class Rook extends Piece{
     @Override
     public List<Case> getPossibleMove(Case currentCase) {
         List<Case> possibleMoves = getCases(currentCase);
-      /*  if(this.getColor() == Color.white){
-            for (int i = currentCase.getNumericalReference().getValue(); i < 8 ; i++) {
-                Case toAdd = new Case(NumericalReference.values()[i], currentCase.getAlphabeticalReference());
-                if(!toAdd.isBusy() && toAdd.isValid()){
-                    possibleMoves.add(toAdd);
-                }
-            }
-        }else {
-            for (int i =  currentCase.getNumericalReference().getValue() - 2; i >= 0 ; i--) {
-                Case toAdd = new Case(NumericalReference.values()[i], currentCase.getAlphabeticalReference());
-                possibleMoves.add(toAdd);
-            }
-        }*/
-        //System.out.println(possibleMoves);
+
         possibleMoves.remove(currentCase);
 
         return possibleMoves;

@@ -1,5 +1,6 @@
 package com.chess.pieces.services;
 
+import com.chess.board.ChessBoard;
 import com.chess.cases.Case;
 import com.chess.enums.AlphabeticalReference;
 import com.chess.enums.Color;
@@ -12,17 +13,17 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class QueenService {
-    public List<Piece> getQueens(){
+    public List<Piece> getQueens(ChessBoard board){
         List<Piece> queens = new ArrayList<>();
 
         Case wQueenCase = new Case(NumericalReference.ONE, AlphabeticalReference.d);
         Position wQueenPosition = new Position(wQueenCase);
-        Queen wQueen = new Queen(Color.white, wQueenPosition);
+        Queen wQueen = new Queen(Color.white, wQueenPosition, board);
         queens.add(wQueen);
 
         Case bQueenCase = new Case(NumericalReference.EIGHT, AlphabeticalReference.d);
         Position bQueenPosition = new Position(bQueenCase);
-        Queen bQueen = new Queen(Color.black, bQueenPosition);
+        Queen bQueen = new Queen(Color.black, bQueenPosition, board);
         queens.add(bQueen);
 
         return queens;
