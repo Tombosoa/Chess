@@ -27,10 +27,6 @@ public class Pawn extends Piece {
         return !this.getHistoric().isEmpty();
     }
 
-    @Override
-    public void move(ChessBoard chessBoard) {
-
-    }
 
     @Override
     public List<Case> getPossibleMove(Case currentCase) {
@@ -94,11 +90,6 @@ public class Pawn extends Piece {
         }
 
         return possibleMoves;
-    }
-
-    @Override
-    protected void attack(ChessBoard chessBoard) {
-
     }
 
 }

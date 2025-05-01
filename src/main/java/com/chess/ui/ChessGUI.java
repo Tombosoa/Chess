@@ -201,13 +201,11 @@ public class ChessGUI extends JFrame {
         highlightedCases = new ArrayList<>();
 
         setClickedPiece(piece);
-        //clickedPiece.addToAllMove(piece.getPosition());
 
         for (Case cs : possibleMoves) {
             Piece p = cs.getPiece();
             JPanel square = squares[cs.getRow() - 1][cs.getCol()];
             originalColors.put(cs, square.getBackground());
-
             if (p == null) {
                 square.setBackground(new Color(249, 255, 66, 142));
             } else if (p.getColor() != piece.getColor()) {

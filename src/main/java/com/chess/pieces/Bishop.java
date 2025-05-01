@@ -2,54 +2,50 @@ package com.chess.pieces;
 
 import com.chess.board.ChessBoard;
 import com.chess.cases.Case;
-import com.chess.enums.AlphabeticalReference;
 import com.chess.enums.Color;
-import com.chess.enums.NumericalReference;
 import com.chess.enums.PieceName;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class Bishop extends Piece{
+public class Bishop extends Piece {
+    private final ChessBoard board;
     public Bishop(Color color, Position position, ChessBoard board) {
-        super(PieceName.bishop, color, 2, position, color.equals(Color.black) ? "blackBishop.png" : "whiteBishop.png", board);
-    }
-
-    @Override
-    public void move(ChessBoard chessBoard) {
-
-    }
-
-    @Override
-    void attack(ChessBoard chessBoard) {
-
+        super(PieceName.bishop, color, 2, position,
+                color.equals(Color.black) ? "blackBishop.png" : "whiteBishop.png", board);
+        this.board = board;
     }
 
     @Override
     public List<Case> getPossibleMove(Case currentCase) {
-        List<Case> possiblesMoves = new ArrayList<>();
+        List<Case> possibleMoves = new ArrayList<>();
+        int row = currentCase.getNumericalReference().getValue() - 1;
+        int col = currentCase.getAlphabeticalReference().ordinal();
 
-        int col = currentCase.getNumericalReference().getValue()-1;
-        int row = currentCase.getAlphabeticalReference().ordinal();
+        int[][] directions = {{1, 1}, {1, -1}, {-1, 1}, {-1, -1}};
 
-        for (int i = 1; i < 8; i++) {
-            if(col + i < 8  && row + i < 8){
-                Case toAdd = new Case(NumericalReference.values()[col+i], AlphabeticalReference.values()[row+i]);
-                possiblesMoves.add(toAdd);
-            }
-            if(col - i >= 0  && row - i >= 0){
-                Case toAdd = new Case(NumericalReference.values()[col-i], AlphabeticalReference.values()[row-i]);
-                possiblesMoves.add(toAdd);
-            }
-            if(col + i < 8  && row - i >= 0){
-                Case toAdd = new Case(NumericalReference.values()[col+i], AlphabeticalReference.values()[row-i]);
-                possiblesMoves.add(toAdd);
-            }
-            if(col - i >= 0  && row + i < 8){
-                Case toAdd = new Case(NumericalReference.values()[col-i], AlphabeticalReference.values()[row+i]);
-                possiblesMoves.add(toAdd);
+        for (int[] dir : directions) {
+            int newRow = row + dir[0];
+            int newCol = col + dir[1];
+
+            while (newRow >= 0 && newRow < 8 && newCol >= 0 && newCol < 8) {
+                Case targetCase = board.getCase(newRow, newCol);
+
+                if (targetCase == null || !targetCase.isValid()) {
+                    break;
+                }
+
+                possibleMoves.add(targetCase);
+
+                if (targetCase.isBusy()) {
+                    break;
+                }
+
+                newRow += dir[0];
+                newCol += dir[1];
             }
         }
-        return  possiblesMoves;
+
+        return possibleMoves;
     }
 }

@@ -11,16 +11,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class King extends Piece {
+    private final ChessBoard board;
     public King(Color color, Position position, ChessBoard board) {
         super(PieceName.king, color, 4, position, color.equals(Color.black) ? "blackKing.png" : "whiteKing.png", board);
-    }
-
-    @Override
-    public void move(ChessBoard chessBoard) {
-    }
-
-    @Override
-    void attack(ChessBoard chessBoard) {
+        this.board = board;
     }
 
     @Override
@@ -39,8 +33,12 @@ public class King extends Piece {
 
                 if (newCol >= 0 && newCol < 8 && newRow >= 0 && newRow < 8) {
                     Case toAdd = new Case(NumericalReference.values()[newCol], AlphabeticalReference.values()[newRow]);
-                    if (toAdd.isValid() && !toAdd.isBusy()) {
-                        possibleMoves.add(toAdd);
+                    Case dToAdd = board.getCase(toAdd.getRow() - 1, toAdd.getCol());
+
+                    if (dToAdd.isValid() && !dToAdd.isBusy()) {
+                        possibleMoves.add(dToAdd);
+                    }else if (dToAdd.isBusy() && dToAdd.getPiece() != null && dToAdd.getPiece().getColor() != this.getColor()){
+                        possibleMoves.add(dToAdd);
                     }
                 }
             }

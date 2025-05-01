@@ -27,9 +27,5 @@ public abstract class Piece {
         historic.add(position);
     }
 
-    public abstract void move(ChessBoard chessBoard);
-
-    abstract void attack(ChessBoard chessBoard);
-
     public abstract List<Case> getPossibleMove(Case currentCase);
 }
