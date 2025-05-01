@@ -11,7 +11,14 @@ public enum NumericalReference {
     private NumericalReference(int value) {
         this.value = value;
     }
-
+    public static NumericalReference fromValue(int value) {
+        for (NumericalReference nr : values()) {
+            if (nr.value == value) {
+                return nr;
+            }
+        }
+        throw new IllegalArgumentException("Invalid numerical value: " + value);
+    }
     public static NumericalReference increment(NumericalReference reference) {
         int newValue = reference.getValue() - 1;
         if (newValue < 8) {

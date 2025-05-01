@@ -29,7 +29,6 @@ public class Case{
     public Case(NumericalReference numericalReference, AlphabeticalReference alphabeticalReference) {
         this.numericalReference = numericalReference;
         this.alphabeticalReference = alphabeticalReference;
-        this.isBusy = false;
         this.color = this.color == Color.black ? Color.black : Color.white;
     }
 
@@ -41,15 +40,14 @@ public class Case{
         return alphabeticalReference.ordinal();
     }
 
-    public Piece addPiece(Piece piece){
+    public void addPiece(Piece piece){
         this.setPiece(piece);
         setBusy(true);
-        return piece;
     }
 
     public void removePiece(){
-        //System.out.println("remove the piece: "+this.getPiece());
         setPiece(null);
+        setBusy(false);
     }
 
     @Override

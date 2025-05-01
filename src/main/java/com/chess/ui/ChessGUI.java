@@ -22,7 +22,8 @@ public class ChessGUI extends JFrame {
     private final JPanel[][] squares = new JPanel[8][8];
     private final Chess chess;
     boolean isClicked = false;
-
+    @Getter
+    private com.chess.enums.Color currentPlayer = com.chess.enums.Color.white;
     private List<Case> highlightedCases = new ArrayList<>();
     private final Map<Case, Color> originalColors = new HashMap<>();
     private Piece selectedPiece = null;
@@ -39,9 +40,10 @@ public class ChessGUI extends JFrame {
         return isClicked;
     }
 
+
     public ChessGUI(Chess chess) {
         this.chess = chess;
-        setTitle("Chess");
+        setTitle("Chess - Turn of " + currentPlayer.toString() + "s");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLayout(new GridLayout(8, 8));
         this.setPreferredSize(new Dimension(500, 500));
@@ -49,6 +51,11 @@ public class ChessGUI extends JFrame {
 
         pack();
         setVisible(true);
+    }
+
+    private void switchPlayer() {
+        currentPlayer = (currentPlayer == com.chess.enums.Color.white) ? com.chess.enums.Color.black : com.chess.enums.Color.white;
+        setTitle("Chess - Turn of " + currentPlayer.toString() + "s");
     }
 
     private void initializeBoard() {
@@ -85,7 +92,21 @@ public class ChessGUI extends JFrame {
             default -> throw new IllegalArgumentException("Invalid color");
         };
     }
-
+    private void printBoardState() {
+        System.out.println("=== Actual board state ===");
+        for (int row = 0; row < 8; row++) {
+            for (int col = 0; col < 8; col++) {
+                Case currentCase = chess.getChessBoard().getCase(row, col);
+                Piece piece = currentCase.getPiece();
+                String pieceInfo = (piece != null)
+                        ? piece.getColor() + " " + piece.getClass().getSimpleName()
+                        : "Empty";
+                System.out.printf("Case [%d][%d]: %s | Busy: %s%n",
+                        row, col, pieceInfo, currentCase.isBusy());
+            }
+        }
+        System.out.println("============================");
+    }
     private void refreshBoard() {
         for (int row = 0; row < squares.length; row++) {
             for (int col = 0; col < squares[row].length; col++) {
@@ -134,6 +155,7 @@ public class ChessGUI extends JFrame {
         }
     }
 
+
     private void handleSquareClick(int row, int col) {
         Case currentCase = chess.getChessBoard().getCase(row, col);
         Piece clicked = currentCase.getPiece();
@@ -144,15 +166,22 @@ public class ChessGUI extends JFrame {
                     return;
                 }
 
+                if (selectedPiece.getColor() != currentPlayer) {
+                    return;
+                }
+
                 choosePosition(currentCase, selectedPiece);
                 resetHighlightedCases();
                 selectedPiece = null;
+                switchPlayer();
                 return;
             }
         }
 
         if (clicked != null) {
-            handlePieceClick(clicked);
+            if (clicked.getColor() == currentPlayer) {
+                handlePieceClick(clicked);
+            }
         }
     }
 
@@ -172,17 +201,24 @@ public class ChessGUI extends JFrame {
         highlightedCases = new ArrayList<>();
 
         setClickedPiece(piece);
-        clickedPiece.addToAllMove(piece.getPosition());
+        //clickedPiece.addToAllMove(piece.getPosition());
 
         for (Case cs : possibleMoves) {
             Piece p = cs.getPiece();
+            JPanel square = squares[cs.getRow() - 1][cs.getCol()];
+            originalColors.put(cs, square.getBackground());
+
+            if (p == null) {
+                square.setBackground(new Color(249, 255, 66, 142));
+            } else if (p.getColor() != piece.getColor()) {
+                square.setBackground(new Color(255, 0, 0, 110));
+            }
+
             if (p == null || p.getColor() != piece.getColor()) {
                 highlightedCases.add(cs);
-                JPanel square = squares[cs.getRow() - 1][cs.getCol()];
-                originalColors.put(cs, square.getBackground());
-                square.setBackground(Color.ORANGE);
             }
         }
+
     }
 
     private void resetHighlightedCases() {
@@ -204,9 +240,11 @@ public class ChessGUI extends JFrame {
 
         cases.addPiece(piece);
         piece.setPosition(new Position(cases));
-
+        //System.out.println(cases);
         setClicked(false);
         refreshBoard();
+        piece.addToAllMove(new Position(cases));
+        //printBoardState();
     }
 
     public static void draw() {

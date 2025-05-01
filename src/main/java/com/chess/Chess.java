@@ -41,16 +41,8 @@ public class Chess {
         List<Piece> kings = kingService.getKings();
         List<Piece> queens = queenService.getQueens();
 
-        Case cases = new Case(NumericalReference.FOUR, AlphabeticalReference.e);
-        Position position = new Position(cases);
-        Piece rook = new Knight(Color.white, position);
-
-        Case bcases = new Case(NumericalReference.FIVE, AlphabeticalReference.f);
-        Position bposition = new Position(bcases);
-        Piece brook = new Knight(Color.black, bposition);
-
        // setPieceOnBoard(rook, board);
-        setPieceOnBoard(brook);
+       //Test for Knight: setPieceOnBoard(brook);
 
         setMultiplePiece(bishops);
         setMultiplePiece(rooks);
@@ -68,6 +60,6 @@ public class Chess {
 
     public static void main(String[] args) {
         Chess game = new Chess();
-        System.out.println(game.initializeBoard().getCase(1,2));
+        System.out.println(game.initializeBoard().getCase(4,5));
     }
 }
