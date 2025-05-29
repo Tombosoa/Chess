@@ -7,7 +7,6 @@ import com.chess.enums.NumericalReference;
 import com.chess.enums.PieceName;
 import lombok.Getter;
 import lombok.ToString;
-
 import java.util.ArrayList;
 import java.util.List;
 

@@ -8,7 +8,6 @@ import com.chess.enums.NumericalReference;
 import com.chess.pieces.Knight;
 import com.chess.pieces.Piece;
 import com.chess.pieces.Position;
-
 import java.util.ArrayList;
 import java.util.List;
 

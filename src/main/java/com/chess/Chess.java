@@ -3,7 +3,6 @@ package com.chess;
 import com.chess.board.ChessBoard;
 import com.chess.pieces.*;
 import com.chess.pieces.services.*;
-
 import java.util.List;
 
 public class Chess {

@@ -2,7 +2,6 @@ package com.chess.pieces;
 
 import com.chess.cases.Case;
 import lombok.AllArgsConstructor;
-
 import java.util.Objects;
 
 @AllArgsConstructor

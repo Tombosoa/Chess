@@ -5,7 +5,6 @@ import com.chess.cases.Case;
 import com.chess.enums.AlphabeticalReference;
 import com.chess.enums.NumericalReference;
 import org.junit.jupiter.api.Test;
-
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class ChessBoardTest {

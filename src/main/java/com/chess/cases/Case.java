@@ -7,7 +7,6 @@ import com.chess.pieces.Piece;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
-
 import java.util.Objects;
 
 @Getter

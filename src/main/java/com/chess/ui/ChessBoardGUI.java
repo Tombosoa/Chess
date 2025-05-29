@@ -1,6 +1,6 @@
 package com.chess.ui;
-import com.chess.board.ChessBoard;
 
+import com.chess.board.ChessBoard;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseAdapter;

@@ -4,7 +4,6 @@ import com.chess.board.ChessBoard;
 import com.chess.cases.Case;
 import com.chess.enums.Color;
 import com.chess.enums.PieceName;
-
 import java.util.ArrayList;
 import java.util.List;
 

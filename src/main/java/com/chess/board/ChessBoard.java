@@ -6,7 +6,6 @@ import com.chess.enums.Color;
 import com.chess.enums.NumericalReference;
 import com.chess.pieces.Piece;
 import com.chess.pieces.Position;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -54,6 +53,20 @@ public class ChessBoard {
     public Case getCase(int row, int column) {
         return board[row][column];
     }
+
+    public List<Piece> getAllPieces() {
+        List<Piece> pieces = new ArrayList<>();
+        for (int i = 0; i < 8; i++) {
+            for (int j = 0; j < 8; j++) {
+                Case currentCase = board[i][j];
+                if (currentCase.isBusy() && currentCase.getPiece() != null) {
+                    pieces.add(currentCase.getPiece());
+                }
+            }
+        }
+        return pieces;
+    }
+
 
     public void printBoard() {
         for (int i = 0; i < 8; i++) {
